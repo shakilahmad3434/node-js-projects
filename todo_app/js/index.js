@@ -41,7 +41,7 @@ const fetchData = () => {
       todo_box.innerHTML = "";
       data.data.map((item) => {
         todo_box.innerHTML += `
-        <div class="bg-white flex justify-between items-center gap-5 p-3 rounded-md">
+        <div class=" flex justify-between items-center gap-5 p-3 rounded-md">
                 <span class="text-2xl" aria-inserted="${item._id}">${item.task}</span>
                 <span class="text-2xl">
                     <i class="fa-solid fa-pen-to-square text-green-500 mr-2 cursor-pointer" id="edit"></i>
