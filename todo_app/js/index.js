@@ -25,7 +25,7 @@ const addTodos = () => {
       body: taskObj, // Convert the data to a JSON string
     })
       .then((res) => res.json())
-      .then((data) => console.log(data))
+      // .then((data) => console.log(data))
       .catch((error) => console.error(error));
     fetchData();
     taskInput.value = "";
@@ -37,7 +37,7 @@ const fetchData = () => {
   fetch("http://localhost:4000/api")
     .then((res) => res.json())
     .then((data) => {
-        console.log(data);
+        // console.log(data);
       todo_box.innerHTML = "";
       data.data.map((item) => {
         todo_box.innerHTML += `
@@ -76,7 +76,7 @@ const fetchData = () => {
         body: updateObj, // Convert the data to a JSON string
       }).then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         fetchData();
     })
       .catch((error) => console.error(error));
@@ -114,7 +114,7 @@ const updateData = () => {
         body: updateObj, // Convert the data to a JSON string
       }).then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         document.querySelector("#modal").classList.remove("flex");
         document.querySelector("#modal").classList.add("hidden");
         fetchData();
