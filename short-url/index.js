@@ -20,31 +20,8 @@ app.set('views', __dirname + '/views');
 // Serve Static Files (optional, if needed)
 app.use(express.static('public'));
 
-// Route to Render homepage.ejs
-app.get('/', (req, res) => {
-    res.render('homepage'); // Renders views/homepage.ejs
-});
-
 // URL Shortener Route
-app.use('/url', urlRoute);
-
-app.get('/:shortId', async (req, res) => {
-    const shortId = req.params.shortId;
-    const entry = await URL.findOneAndUpdate(
-        { shortId },
-        { 
-            $push: {
-                visitHistory: { timestamp: Date.now() }
-            } 
-        }
-    );
-
-    if (entry) {
-        res.redirect(entry.redirectURL);
-    } else {
-        res.status(404).send('URL Not Found');
-    }
-});
+app.use('/', urlRoute);
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);

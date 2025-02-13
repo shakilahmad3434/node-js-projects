@@ -3,6 +3,7 @@ const URL = require('../models/url.model')
 
 async function handleGenerateNewShortURL(req, res){
     const body = req.body;
+
     if(!body.url) return res.status(400).json({error: 'URL is required'})
      const shortID = shortid();
      await URL.create({
@@ -21,7 +22,26 @@ async function handleGetAnalytics(req, res) {
 
 }
 
+async function handleRedirectURL(req, res){
+    const shortId = req.params.shortId;
+    const entry = await URL.findOneAndUpdate(
+        { shortId },
+        { 
+            $push: {
+                visitHistory: { timestamp: Date.now() }
+            } 
+        }
+    );
+
+    if (entry) {
+        res.redirect(entry.redirectURL);
+    } else {
+        res.status(404).send('URL Not Found');
+    }
+}
+
 module.exports = {
     handleGenerateNewShortURL,
-    handleGetAnalytics
+    handleGetAnalytics,
+    handleRedirectURL
 }
