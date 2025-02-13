@@ -2,17 +2,34 @@ const shortid = require('shortid');
 const URL = require('../models/url.model')
 
 async function handleGenerateNewShortURL(req, res){
-    const body = req.body;
+    try {
+        const origURL = req.body.url;
+        // Check if URL is provided
+      if (!origURL) {
+        return res.status(400).json({ error: "URL is required" });
+      }
 
-    if(!body.url) return res.status(400).json({error: 'URL is required'})
-     const shortID = shortid();
-     await URL.create({
+      // Add 'https://' if the URL does not start with 'http://' or 'https://'
+      let fullURL = origURL.trim();
+      if (!fullURL.startsWith('http://') && !fullURL.startsWith('https://')) {
+        fullURL = `https://${fullURL}`;
+      }
+
+      // Generate a short ID
+      const shortID = shortid();
+      // Save to the database
+      await URL.create({
         shortId: shortID,
-        redirectURL: body.url,
+        redirectURL: fullURL,
         visitHistory:[],
-     });
+      });
 
-     return res.status(200).json({id: shortID})
+      // Send success response
+      res.json({ message: `Short URL created successfully! http://localhost:8001/${shortID}` });
+
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 async function handleGetAnalytics(req, res) {
