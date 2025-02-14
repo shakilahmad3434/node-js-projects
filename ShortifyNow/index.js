@@ -11,10 +11,8 @@ app.listen(process.env.PORT, () => {
     console.log(`Server running at http://localhost:${process.env.PORT} PORT`);
 });
 
-// MongoDB URL
-const url = "mongodb://127.0.0.1:27017/bitly";
 // Connect MongoDB
-mongoose.connect(url)
+mongoose.connect(process.env.MONGODB_URL)
 
 
 // middleware for json & urlincoding

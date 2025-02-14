@@ -33,10 +33,12 @@ async function getLocation(ip) {
 
 async function handleGetRequest(req, res) {
   try {
-    // Extract IP address
-    const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.ip).replace('::ffff:', '');
-    console.log('User IP:', ip);
-    // const ip = "103.207.125.164";
+    // Extract IP address & this code is a only live server on your deployment
+    // const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.ip).replace('::ffff:', '');
+    // console.log('User IP:', ip);
+
+    // this is a only localhost system
+    const ip = "103.207.125.164";
 
     // Get location data
     const location = await getLocation(ip);
@@ -141,16 +143,7 @@ async function handleGetAnalytics(req, res) {
 
 // get all data on homepage
 async function handleGetAllData(req, res) {
-  let userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-
-    // Handle IPv6 addresses and convert ::1 to 127.0.0.1 for readability
-    if (userIP.substr(0, 7) === "::ffff:") {
-        userIP = userIP.substr(7);
-    } else if (userIP === "::1") {
-        userIP = "127.0.0.1";
-    }
-
-    console.log(`Your IP address is ${userIP}`);
+  
   const allURLInfo = await User.find({ createdBy: req.session.userId });
   const PORT = process.env.PORT;
   res.render("home", {allURLInfo, PORT});
