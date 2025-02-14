@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>URL Shortner</h1>
+        <form id="shorten-form">
+            <div>
+                <label for="url">Enter Destination URL:</label>
+                <input type="text" id="url" name="url" placeholder="Type or paste a link">
+            </div>
+            <button type="submit">Get a short link</button>
+        </form>
+        
+        <div id="message"></div>
+
+        <div class="url-details">
+            <h2>URLs Stats</h2>
+            <table>
+                <tr>
+                  <th>S.No</th>
+                  <th>Redirect URLs</th>
+                  <th>Clicks</th>
+                  <th>Device Info</th>
+                  <th>Location Info</th>
+                </tr>
+
+                <% allURLInfo.forEach(function(urls, index) { %>
+                    <tr>
+                      <td><%= index + 1 %></td>
+                      <td><a href="http://localhost:<%=PORT%>/<%= urls.shortId %>" target="_blank">http://localhost:<%=PORT%>/<%= urls.shortId %></a></td>
+                      <td><%= urls.visitHistory.length %></td>
+                      <td>
+                          <ul>
+                              <% urls.deviceInfo.forEach(function(device) { %>
+                                  <li><%= device.device %>, <%= device.browser %>, <%= device.os %></li>
+                              <% }); %>
+                          </ul>
+                      </td>
+                      <td>
+                          <ul>
+                              <% urls.locationInfo.forEach(function(location) { %>
+                                  <li><%= location.country %>, <%= location.region %>, <%= location.city %></li>
+                              <% }); %>
+                          </ul>
+                      </td>
+                    </tr>
+                <% }); %>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('shorten-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+    
+            const urlInput = document.getElementById('url');
+            const url = urlInput.value;
+    
+            // Make a POST request to /url
+            fetch('/url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url: url })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display success message
+                const messageDiv = document.getElementById('message');
+                messageDiv.textContent = data.message;
+                messageDiv.style.color = 'green';
+                // Reload the page after 2 seconds
+        setTimeout(() => {
+            window.location.reload(); // Reload the page
+        }, 1000);
+            })
+            .catch(error => {
+                // Display error message
+                const messageDiv = document.getElementById('message');
+                messageDiv.textContent = 'Error: ' + error.message;
+                messageDiv.style.color = 'red';
+                
+            });
+        });
+    </script>
+</body>
+</html>
